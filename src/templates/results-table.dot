@@ -1,0 +1,20 @@
+<table class="fn-results">
+    <thead>
+    <tr>
+        <th>Column name</th>
+        <th>Filled cells (in percent)</th>
+        <th>Unique cells count</th>
+        <th>Column type</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{~it:column}}
+        <tr>
+            <td>{{=column.title}}</td>
+            <td>{{=Math.round(column.filledCells.length / column.cells.length * 100)}}</td>
+            <td>{{=column.uniqueCells.length}}</td>
+            <td>{{=column.type}}</td>
+        </tr>
+    {{~}}
+    </tbody>
+</table>
