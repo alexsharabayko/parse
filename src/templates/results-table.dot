@@ -18,3 +18,9 @@
     {{~}}
     </tbody>
 </table>
+
+<div>
+    <h5>Common info:</h5>
+    <span>Count of rows: {{=it[0].cells.length}}</span>
+    <span>Count of columns: {{=it.length}}</span>
+</div>

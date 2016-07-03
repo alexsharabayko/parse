@@ -1,13 +1,15 @@
 var Papa = require('papaparse');
 
-var responseData;
-var columnData = [];
+Papa.LocalChunkSize = 200;
+
+var responseData = [];
+var columns = [];
 
 var parseDataToColumns = function () {
     var data = responseData;
 
     Object.keys(data[0]).forEach(function (key) {
-        columnData.push({
+        columns.push({
             title: key,
             cells: data.map(function (d) {
                 return d[key];
@@ -17,7 +19,7 @@ var parseDataToColumns = function () {
 };
 
 var setFilledCells = function () {
-    columnData.forEach(function (column) {
+    columns.forEach(function (column) {
         column.filledCells = column.cells.filter(function (cell) {
             return cell !== '';
         });
@@ -25,7 +27,7 @@ var setFilledCells = function () {
 };
 
 var setUniqueCells = function () {
-    columnData.forEach(function (column) {
+    columns.forEach(function (column) {
         var map = {};
 
         column.filledCells.forEach(function (cell) {
@@ -64,9 +66,9 @@ var typeCheckers = [
 ];
 
 var setColumnType = function () {
-    var data = columnData;
+    var data = columns;
 
-    columnData.forEach(function (column) {
+    columns.forEach(function (column) {
         for (let i = 0; i < typeCheckers.length; i++) {
             let checker = typeCheckers[i];
 
@@ -84,12 +86,12 @@ var showData = function () {
     var wrapper = document.querySelector('.fn-table-wrapper');
     var templateFn = require('templates/results-table.dot');
 
-    wrapper.innerHTML = templateFn(columnData);
+    wrapper.innerHTML = templateFn(columns);
 };
 
 var completeHandler = function (result) {
-    responseData = result.data;
-
+    //responseData = result.data;
+    //
     parseDataToColumns();
     setFilledCells();
     setUniqueCells();
@@ -97,9 +99,16 @@ var completeHandler = function (result) {
     showData();
 };
 
+var chunkHandler = function (response) {
+    if (response && response.data.length) {
+        responseData = responseData.concat(response.data);
+    }
+};
+
 var getConfig = function () {
     return {
         complete: completeHandler,
+        chunk: chunkHandler,
         header: true
     }
 };
