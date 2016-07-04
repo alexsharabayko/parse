@@ -1,7 +1,8 @@
 var Papa = require('papaparse');
 
-Papa.LocalChunkSize = 200;
+//Papa.LocalChunkSize = 200;
 
+var columnTitlesAreInitialized = false;
 var responseData = [];
 var columns = [];
 
@@ -38,32 +39,44 @@ var setUniqueCells = function () {
     });
 };
 
-var typeCheckers = [
-    {
-        type: 'number',
-        fn: function (column) {
-            return column.uniqueCells.every(function (cell) {
-                return /^-?\d+\.?\d*$/.test(cell);
-            });
-        }
+//var typeCheckers = [
+//    {
+//        type: 'number',
+//        fn: function (column) {
+//            return column.uniqueCells.every(function (cell) {
+//                return /^-?\d+\.?\d*$/.test(cell);
+//            });
+//        }
+//    },
+//    {
+//        type: 'date',
+//        fn: function (column) {
+//            return column.uniqueCells.every(function (cell) {
+//                return Date.parse(cell);
+//            });
+//        }
+//    },
+//    {
+//        type: 'email',
+//        fn: function (column) {
+//            return column.uniqueCells.every(function (cell) {
+//                return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(cell);
+//            });
+//        }
+//    }
+//];
+
+var typeCheckers = {
+    number: function (cell) {
+        return /^-?\d+\.?\d*$/.test(cell);
     },
-    {
-        type: 'date',
-        fn: function (column) {
-            return column.uniqueCells.every(function (cell) {
-                return Date.parse(cell);
-            });
-        }
+    date: function (cell) {
+        return Date.parse(cell);
     },
-    {
-        type: 'email',
-        fn: function (column) {
-            return column.uniqueCells.every(function (cell) {
-                return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(cell);
-            });
-        }
+    email: function (cell) {
+        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(cell);
     }
-];
+};
 
 var setColumnType = function () {
     var data = columns;
@@ -91,25 +104,79 @@ var showData = function () {
 
 var completeHandler = function (result) {
     //responseData = result.data;
+    for (let i = 0; i < responseData.length; i++) {
+        responseData[i].uniqueValuesCount = Object.keys(responseData[i].uniqueValuesMap).length;
+        responseData[i].uniqueValuesMap = null;
+    }
+
+    console.log('Finished', Date.now() - window.startTime);
+
+    console.log(responseData);
     //
-    parseDataToColumns();
-    setFilledCells();
-    setUniqueCells();
-    setColumnType();
-    showData();
+    //parseDataToColumns();
+    //setFilledCells();
+    //setUniqueCells();
+    //setColumnType();
+    //showData();
 };
 
-var chunkHandler = function (response) {
-    if (response && response.data.length) {
-        responseData = responseData.concat(response.data);
+var stepHandler = function (response) {
+    var data = response.data[0];
+
+    if (!columnTitlesAreInitialized) {
+        for (let i = 0; i < data.length; i++) {
+            responseData.push({
+                title: data[i],
+                cellsCount: 0,
+                filledCellsCount: 0,
+                uniqueValuesMap: {},
+                type: null
+            });
+        }
+
+        columnTitlesAreInitialized += 1;
+    } else {
+        for (let i = 0; i < data.length; i++) {
+            responseData[i].cellsCount += 1;
+
+            if (data[i] !== '') {
+                responseData[i].filledCellsCount += 1;
+
+                responseData[i].uniqueValuesMap[data[i]] = 1;
+
+                if (!responseData[i].type) {
+                    let checkers = Object.keys(typeCheckers);
+
+                    for (let j = 0; j < checkers.length; j++) {
+                        if (typeCheckers[checkers[j]](data[i])) {
+                            responseData[i].type = checkers[j];
+                            break;
+                        }
+                    }
+
+                    responseData[i].type || (responseData[i].type = 'string');
+                } else {
+                    if (responseData[i].type !== 'string' && !typeCheckers[responseData[i].type](data[i])) {
+                        responseData[i].type = 'string';
+                    }
+                }
+            }
+        }
     }
+
+    //if (response && response.data.length) {
+    //    responseData = responseData.concat(response.data);
+    //}
+    //console.log(arguments);
 };
 
 var getConfig = function () {
+    window.startTime = Date.now();
+
     return {
         complete: completeHandler,
-        chunk: chunkHandler,
-        header: true
+        header: false,
+        step: stepHandler
     }
 };
 
