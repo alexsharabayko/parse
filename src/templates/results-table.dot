@@ -11,8 +11,8 @@
     {{~it:column}}
         <tr>
             <td>{{=column.title}}</td>
-            <td>{{=Math.round(column.filledCells.length / column.cells.length * 100)}}</td>
-            <td>{{=column.uniqueCells.length}}</td>
+            <td>{{=Math.round(column.filledCellsCount / column.cellsCount * 100)}}</td>
+            <td>{{=column.uniqueCellsCount}}</td>
             <td>{{=column.type}}</td>
         </tr>
     {{~}}
@@ -21,6 +21,6 @@
 
 <div>
     <h5>Common info:</h5>
-    <span>Count of rows: {{=it[0].cells.length}}</span>
+    <span>Count of rows: {{=it[0].cellsCount}}</span>
     <span>Count of columns: {{=it.length}}</span>
 </div>

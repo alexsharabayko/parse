@@ -39,33 +39,6 @@ var setUniqueCells = function () {
     });
 };
 
-//var typeCheckers = [
-//    {
-//        type: 'number',
-//        fn: function (column) {
-//            return column.uniqueCells.every(function (cell) {
-//                return /^-?\d+\.?\d*$/.test(cell);
-//            });
-//        }
-//    },
-//    {
-//        type: 'date',
-//        fn: function (column) {
-//            return column.uniqueCells.every(function (cell) {
-//                return Date.parse(cell);
-//            });
-//        }
-//    },
-//    {
-//        type: 'email',
-//        fn: function (column) {
-//            return column.uniqueCells.every(function (cell) {
-//                return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(cell);
-//            });
-//        }
-//    }
-//];
-
 var typeCheckers = {
     number: function (cell) {
         return /^-?\d+\.?\d*$/.test(cell);
@@ -99,75 +72,66 @@ var showData = function () {
     var wrapper = document.querySelector('.fn-table-wrapper');
     var templateFn = require('templates/results-table.dot');
 
-    wrapper.innerHTML = templateFn(columns);
+    wrapper.innerHTML = templateFn(responseData);
 };
 
 var completeHandler = function (result) {
     //responseData = result.data;
     for (let i = 0; i < responseData.length; i++) {
-        responseData[i].uniqueValuesCount = Object.keys(responseData[i].uniqueValuesMap).length;
-        responseData[i].uniqueValuesMap = null;
+        responseData[i].uniqueCellsCount = Object.keys(responseData[i].uniqueCellsMap).length;
+        responseData[i].uniqueCellsMap = null;
     }
 
     console.log('Finished', Date.now() - window.startTime);
 
     console.log(responseData);
-    //
-    //parseDataToColumns();
-    //setFilledCells();
-    //setUniqueCells();
-    //setColumnType();
-    //showData();
+    showData();
 };
 
 var stepHandler = function (response) {
     var data = response.data[0];
 
     if (!columnTitlesAreInitialized) {
-        for (let i = 0; i < data.length; i++) {
+        data.forEach(function (cell) {
             responseData.push({
-                title: data[i],
+                title: cell,
                 cellsCount: 0,
                 filledCellsCount: 0,
-                uniqueValuesMap: {},
+                uniqueCellsMap: {},
                 type: null
             });
-        }
+        });
 
         columnTitlesAreInitialized += 1;
     } else {
-        for (let i = 0; i < data.length; i++) {
-            responseData[i].cellsCount += 1;
+        responseData.forEach(function (item, i) {
+            item.cellsCount += 1;
 
-            if (data[i] !== '') {
-                responseData[i].filledCellsCount += 1;
+            if (data[i] && data[i] !== '') {
+                item.filledCellsCount += 1;
 
-                responseData[i].uniqueValuesMap[data[i]] = 1;
+                item.uniqueCellsMap[data[i]] = 1;
 
-                if (!responseData[i].type) {
+                if (!item.type) {
                     let checkers = Object.keys(typeCheckers);
 
                     for (let j = 0; j < checkers.length; j++) {
                         if (typeCheckers[checkers[j]](data[i])) {
-                            responseData[i].type = checkers[j];
+                            item.type = checkers[j];
                             break;
                         }
                     }
 
-                    responseData[i].type || (responseData[i].type = 'string');
+                    item.type || (item.type = 'string');
+
                 } else {
-                    if (responseData[i].type !== 'string' && !typeCheckers[responseData[i].type](data[i])) {
-                        responseData[i].type = 'string';
+                    if (item.type !== 'string' && !typeCheckers[item.type](data[i])) {
+                        item.type = 'string';
                     }
                 }
             }
-        }
+        })
     }
-
-    //if (response && response.data.length) {
-    //    responseData = responseData.concat(response.data);
-    //}
-    //console.log(arguments);
 };
 
 var getConfig = function () {
