@@ -6,7 +6,7 @@ const webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    context: __dirname + '/src',
+    context: __dirname + '/client',
 
     entry: {
         index: './js/init'
@@ -41,7 +41,7 @@ module.exports = {
     ],
 
     resolve: {
-        modulesDirectories: ['js', 'src', 'node_modules'],
+        modulesDirectories: ['js', 'client', 'node_modules'],
         extensions: ['', '.js']
     },
 

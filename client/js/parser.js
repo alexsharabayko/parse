@@ -82,6 +82,7 @@ Parser.prototype = {
     },
 
     stepHandler: function (response) {
+        console.log(window.performance.memory);
         if (response && response.data) {
             response.data.forEach(function (data) {
                 this.columnAreInitialized ? this.addColumnData(data) : this.initializeColumns(data);
