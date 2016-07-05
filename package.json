@@ -2,9 +2,12 @@
   "name": "parse-app",
   "version": "0.0.1",
   "devDependencies": {
+    "babyparse": "^0.4.6",
     "dot-loader": "^0.1.1",
+    "express": "^4.14.0",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.22.0",
+    "multiparty": "^4.1.2",
     "node-inspector": "^0.12.8",
     "papaparse": "^4.1.2",
     "supervisor": "^0.11.0",
@@ -13,5 +16,8 @@
   "scripts": {
     "start": "webpack-dev-server --inline --hot --history-api-fallback",
     "publish": "NODE_ENV=production webpack"
+  },
+  "dependencies": {
+    "connect-busboy": "0.0.2"
   }
 }

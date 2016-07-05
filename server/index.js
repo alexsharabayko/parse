@@ -1,16 +1,51 @@
-var http = require('http');
-const PORT=4000;
+var express = require('express');
+var app = express();
+var port = 4000;
 
-function handleRequest(req, res){
-    if (req.method === 'GET' && req.url === '/goro') {
-        res.end('For file path');
-    } else {
-        res.end('Bad request');
-    }
-}
+var multiparty = require('multiparty');
+var path = require('path');
+var fs = require('fs');
 
-var server = http.createServer(handleRequest);
+var Parser = require('./parser');
 
-server.listen(PORT, function(){
-    console.log("Server listening on: http://localhost:%s", PORT);
+app.use(allowCrossDomain);
+
+app.listen(port);
+console.log('Listening port ' + port);
+
+app.post('/goro', function (req, res) {
+    var form = new multiparty.Form();
+
+    //form.on('part', function (part) {
+    //    console.log(part.toString('utf8'));
+    //
+    //    debugger;
+    //
+    //    part.resume();
+    //});
+    //
+    //form.on('close', function () {
+    //    res.json({message: 'ok'});
+    //});
+
+    form.parse(req, function (err, fields, files) {
+        var file = files.file[0];
+
+        fs.readFile(file.path, function (err, data) {
+            var parser = new Parser(data.toString('utf8'), {
+                success: function (responseData) {
+                    res.json({ responseData: responseData });
+                }
+            });
+
+            res.json(parser.parse());
+        });
+    });
 });
+
+function allowCrossDomain (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
