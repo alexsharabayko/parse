@@ -32,3 +32,10 @@ runServerParseButton.addEventListener('click', function (event) {
         tableView.drawTable(responseData);
     });
 });
+
+uploadFileElement.addEventListener('change', function (event) {
+    var files = Array.apply(null, event.target.files);
+    var textElement = document.querySelector('.fn-file-uploader-text');
+
+    textElement.innerHTML = files.map(f => f.name).join(', ');
+});
