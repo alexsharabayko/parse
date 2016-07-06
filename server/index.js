@@ -16,18 +16,6 @@ console.log('Listening port ' + port);
 app.post('/goro', function (req, res) {
     var form = new multiparty.Form();
 
-    //form.on('part', function (part) {
-    //    console.log(part.toString('utf8'));
-    //
-    //    debugger;
-    //
-    //    part.resume();
-    //});
-    //
-    //form.on('close', function () {
-    //    res.json({message: 'ok'});
-    //});
-
     form.parse(req, function (err, fields, files) {
         var file = files.file[0];
 

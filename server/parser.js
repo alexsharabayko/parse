@@ -22,15 +22,13 @@ Parser.prototype = {
         }
     },
 
-    completeHandler: function (result) {
+    completeHandler: function () {
         var responseData = this.responseData;
 
         responseData.forEach(function (column) {
             column.uniqueCellsCount = Object.keys(column.uniqueCellsMap).length;
             column.uniqueCellsMap = null;
         });
-
-        this.options.success(responseData);
     },
 
     initializeColumns: function (data) {
@@ -103,6 +101,7 @@ Parser.prototype = {
         var parsed = Baby.parse(this.file, this.getConfig());
 
         this.stepHandler(parsed);
+        this.completeHandler();
 
         return this.responseData;
     }

@@ -23,7 +23,10 @@ document.querySelector('.fn-upload-file-form').addEventListener('submit', functi
     window.fetch('http://localhost:4000/goro', {
         method: 'POST',
         body: data
-    }).then(resp => resp.json()).then(function (resp) {
-        debugger;
+    }).then(resp => resp.json()).then(function (responseData) {
+        var wrapper = document.querySelector('.fn-table-wrapper');
+        var templateFn = require('templates/results-table.dot');
+
+        wrapper.innerHTML = templateFn(responseData);
     });
 });
