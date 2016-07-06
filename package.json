@@ -2,7 +2,9 @@
   "name": "parse-app",
   "version": "0.0.1",
   "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
     "babyparse": "^0.4.6",
+    "css-loader": "^0.23.1",
     "dot-loader": "^0.1.1",
     "express": "^4.14.0",
     "file-loader": "^0.9.0",
@@ -10,6 +12,7 @@
     "multiparty": "^4.1.2",
     "node-inspector": "^0.12.8",
     "papaparse": "^4.1.2",
+    "style-loader": "^0.13.1",
     "supervisor": "^0.11.0",
     "webpack": "^1.13.1"
   },

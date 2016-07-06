@@ -16,17 +16,27 @@ console.log('Listening port ' + port);
 app.post('/goro', function (req, res) {
     var form = new multiparty.Form();
 
+    var startTime = Date.now();
+
     form.parse(req, function (err, fields, files) {
         var file = files.file[0];
 
         fs.readFile(file.path, function (err, data) {
             var parser = new Parser(data.toString('utf8'), {
                 success: function (responseData) {
-                    res.json({ responseData: responseData });
+                    res.json({ columnData: responseData });
                 }
             });
 
-            res.json(parser.parse());
+            var columnData = parser.parse();
+
+            res.json({
+                parsingType: 'server',
+                filename: file.originalFilename,
+                startTime: startTime,
+                finishTime: Date.now(),
+                columnData: columnData
+            });
         });
     });
 });

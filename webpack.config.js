@@ -29,6 +29,10 @@ module.exports = {
             {
                 test: /\.dot$/,
                 loader: "dot"
+            },
+            {
+                test: /\.css$/,
+                loader: "style!css!autoprefixer"
             }
         ]
     },

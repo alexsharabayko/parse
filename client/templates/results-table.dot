@@ -1,7 +1,8 @@
-<h3>Filename: </h3>
+<h3>{{=it.filename}} (was parsed by {{=it.parsingType}})</h3>
 
-<p>Start time: </p>
-<p>Finish time: </p>
+<p>Start time: {{=(new Date(it.startTime)).toLocaleString()}}</p>
+<p>Finish time: {{=(new Date(it.finishTime)).toLocaleString()}}</p>
+<p>Total time: {{=it.finishTime - it.startTime}} milliseconds</p>
 
 <table class="fn-results">
     <thead>
@@ -13,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-    {{~it:column}}
+    {{~it.columnData:column}}
         <tr>
             <td>{{=column.title}}</td>
             <td>{{=Math.round(column.filledCellsCount / column.cellsCount * 100)}}</td>
@@ -26,6 +27,6 @@
 
 <div>
     <h5>Common info:</h5>
-    <span>Count of rows: {{=it[0].cellsCount}}</span>
-    <span>Count of columns: {{=it.length}}</span>
+    <span>Count of rows: {{=it.columnData[0].cellsCount}}</span>
+    <span>Count of columns: {{=it.columnData.length}}</span>
 </div>

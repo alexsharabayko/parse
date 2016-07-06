@@ -2,7 +2,7 @@ var mainContainer = document.querySelector('.fn-file-tables');
 
 var currentLi = null;
 
-module.exports = {
+var tableView =  {
     createCurrentLi: function () {
         if (!currentLi) {
             var li = document.createElement('li');
@@ -16,7 +16,7 @@ module.exports = {
     showLoading: function () {
         var templateFn = require('templates/table-loading.dot');
 
-        this.createCurrentLi();
+        tableView.createCurrentLi();
 
         currentLi.innerHTML = templateFn();
     },
@@ -24,14 +24,16 @@ module.exports = {
     drawTable: function (responseData) {
         var templateFn = require('templates/results-table.dot');
 
-        this.createCurrentLi();
+        tableView.createCurrentLi();
 
         currentLi.innerHTML = templateFn(responseData);
 
-        this.removeCurrentLi();
+        tableView.removeCurrentLi();
     },
 
     removeCurrentLi: function () {
         currentLi = null;
     }
 };
+
+module.exports = tableView;

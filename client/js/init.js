@@ -1,3 +1,5 @@
+require('css/main.css');
+
 var Parser = require('parser');
 var tableView = require('table-view');
 
@@ -13,13 +15,7 @@ runClientParseButton.addEventListener('click', function (event) {
 
     tableView.showLoading();
 
-    var parser = new Parser(file, {
-        success: function (responseData) {
-            tableView.drawTable(responseData);
-        }
-    });
-
-    parser.parse();
+    new Parser(file, { success: tableView.drawTable });
 });
 
 runServerParseButton.addEventListener('click', function (event) {

@@ -2,9 +2,13 @@ var Papa = require('papaparse');
 
 var Parser = function (file, options) {
     this.columnAreInitialized = false;
-    this.responseData = [];
+    this.columnData = [];
     this.file = file;
     this.options = options;
+
+    this.startTime = Date.now();
+
+    Papa.parse(this.file, this.getConfig());
 };
 
 Parser.prototype = {
@@ -21,19 +25,25 @@ Parser.prototype = {
     },
 
     completeHandler: function (result) {
-        var responseData = this.responseData;
+        var responseData = this.columnData;
 
         responseData.forEach(function (column) {
             column.uniqueCellsCount = Object.keys(column.uniqueCellsMap).length;
             column.uniqueCellsMap = null;
         });
 
-        this.options.success(responseData);
+        this.options.success({
+            parsingType: 'client',
+            filename: this.file.name,
+            startTime: this.startTime,
+            finishTime: Date.now(),
+            columnData: this.columnData
+        });
     },
 
     initializeColumns: function (data) {
         data.forEach(function (cell) {
-            this.responseData.push({
+            this.columnData.push({
                 title: cell,
                 cellsCount: 0,
                 filledCellsCount: 0,
@@ -68,7 +78,7 @@ Parser.prototype = {
     },
 
     addColumnData: function (data) {
-        this.responseData.forEach(function (item, i) {
+        this.columnData.forEach(function (item, i) {
             item.cellsCount += 1;
 
             if (data[i] && data[i] !== '') {
@@ -98,10 +108,6 @@ Parser.prototype = {
             header: false,
             chunk: this.stepHandler.bind(this)
         }
-    },
-
-    parse: function () {
-        Papa.parse(this.file, this.getConfig());
     }
 };
 
