@@ -7,9 +7,16 @@
 <body>
 <form class="fn-upload-file-form">
     <input name="file" type="file" class="fn-csv-file"/>
-    <button type="submit">Parse file</button>
+    <div>
+        <p>Parsing file with server (BabyParse fraemwork) with statistic</p>
+        <button class="fn-parse-with-server">Parse file with server</button>
+    </div>
+    <div>
+        <p>Parsing file client(PapaParse fraemwork, Chrome better) without statistic</p>
+        <button class="fn-parse-with-client">Parse file with client</button>
+    </div>
 </form>
 
-<div class="fn-table-wrapper"></div>
+<ul class="fn-file-tables"></ul>
 </body>
 </html>
