@@ -31,7 +31,7 @@ runServerParseButton.addEventListener('click', function (event) {
 
     tableView.showLoading();
 
-    window.fetch('http://localhost:4000/goro', {
+    window.fetch('http://localhost:4000/parse', {
         method: 'POST',
         body: data
     }).then(resp => resp.json()).then(function (responseData) {

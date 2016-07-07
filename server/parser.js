@@ -2,11 +2,10 @@
 
 var Baby = require('babyparse');
 
-var Parser = function (file, options) {
+var Parser = function (file) {
     this.columnAreInitialized = false;
     this.columnData = [];
     this.file = file;
-    this.options = options;
 };
 
 Parser.prototype = {
@@ -81,7 +80,7 @@ Parser.prototype = {
         }, this);
     },
 
-    stepHandler: function (response) {
+    parseResponse: function (response) {
         if (response && response.data) {
             response.data.forEach(function (data) {
                 this.columnAreInitialized ? this.addColumnData(data) : this.initializeColumns(data);
@@ -100,7 +99,7 @@ Parser.prototype = {
     parse: function () {
         var parsed = Baby.parse(this.file, this.getConfig());
 
-        this.stepHandler(parsed);
+        this.parseResponse(parsed);
         this.completeHandler();
 
         return this.columnData;
