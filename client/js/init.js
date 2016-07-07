@@ -2,51 +2,13 @@ require('css/main.css');
 
 var Parser = require('parser');
 var tableView = require('table-view');
-var SimpleChart = require('simple-chart');
+
+var chartManager = require('charts-manager');
 
 var uploadForm = document.querySelector('.fn-upload-file-form');
 var uploadFileElement = document.querySelector('.fn-csv-file');
 var runServerParseButton = document.querySelector('.fn-parse-with-server');
 var runClientParseButton = document.querySelector('.fn-parse-with-client');
-
-var timeChart = new SimpleChart(document.querySelector('.fn-time-chart'));
-var memoryChart = new SimpleChart(document.querySelector('.fn-memory-chart'));
-
-var refreshTimeChart = function (d) {
-    timeChart
-        .addValue(d)
-        .style('width', function (i) {
-            var max = Math.max.apply(Math, this.data.map(function (d) {
-                return d.duration;
-            }));
-
-            return Math.round(i.duration / max * 100) + '%';
-        })
-        .text(function (i) {
-            return i.duration;
-        })
-        .title(function (i) {
-            return i.filename + ' (' + i.parsingType + ')';
-        });
-};
-
-var refreshMemoryChart = function (d) {
-    memoryChart
-        .addValue(d)
-        .style('width', function (i) {
-            var max = Math.max.apply(Math, this.data.map(function (d) {
-                return d.memory.heapUsed;
-            }));
-
-            return Math.round(i.memory.heapUsed / max * 100) + '%';
-        })
-        .text(function (i) {
-            return i.memory.heapUsed;
-        })
-        .title(function (i) {
-            return i.filename;
-        });
-};
 
 runClientParseButton.addEventListener('click', function (event) {
     event.preventDefault();
@@ -58,7 +20,7 @@ runClientParseButton.addEventListener('click', function (event) {
     new Parser(file, { success: function (responseData) {
         tableView.drawTable(responseData);
 
-        refreshTimeChart(responseData);
+        chartManager.refreshTimeChart(responseData);
     }});
 });
 
@@ -75,12 +37,12 @@ runServerParseButton.addEventListener('click', function (event) {
     }).then(resp => resp.json()).then(function (responseData) {
         tableView.drawTable(responseData);
 
-        refreshTimeChart(responseData);
-        refreshMemoryChart(responseData);
+        chartManager.refreshTimeChart(responseData);
+        chartManager.refreshMemoryChart(responseData);
     });
 });
 
-uploadFileElement.addEventListener('change', function (event) {
+uploadFileElement.addEventListener('change', function () {
     var file = uploadFileElement.files[0];
 
     document.querySelector('.fn-file-uploader-text').innerHTML = file.name;
