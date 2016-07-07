@@ -35,6 +35,7 @@ app.post('/goro', function (req, res) {
                 filename: file.originalFilename,
                 startTime: startTime,
                 finishTime: Date.now(),
+                memory: process.memoryUsage(),
                 columnData: columnData
             });
         });

@@ -65,6 +65,18 @@ body {
     max-width: 100rem;
 }
 
+.section {
+    margin-bottom: 3rem;
+}
+
+.section__title {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    font-size: 3rem;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+}
+
 .upload-form {
     font-size: 0;
 }
@@ -171,4 +183,22 @@ body {
 .file-tables__common {
     font-size: 1.6rem;
     text-align: center;
+}
+
+.time-chart,
+.memory-chart {
+
+}
+
+.time-chart > .bar,
+.memory-chart > .bar {
+    margin-bottom: 0.2rem;
+    padding: 0 1rem;
+    line-height: 3rem;
+    overflow: hidden;
+    color: #fff;
+    font-size: 1.6rem;
+    text-overflow: ellipsis;
+    background-color: #4682b4;
+    white-space: nowrap;
 }
