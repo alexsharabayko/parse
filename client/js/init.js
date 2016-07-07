@@ -34,11 +34,15 @@ runServerParseButton.addEventListener('click', function (event) {
     window.fetch('http://localhost:4000/parse', {
         method: 'POST',
         body: data
-    }).then(resp => resp.json()).then(function (responseData) {
+    }).then(function (resp) {
+        return resp.json();
+    }).then(function (responseData) {
         tableView.drawTable(responseData);
 
-        chartManager.refreshTimeChart(responseData);
-        chartManager.refreshMemoryChart(responseData);
+        if (!responseData.error) {
+            chartManager.refreshTimeChart(responseData);
+            chartManager.refreshMemoryChart(responseData);
+        }
     });
 });
 

@@ -2,10 +2,15 @@
 
 var Baby = require('babyparse');
 
-var Parser = function (file) {
+var Parser = function (file, options) {
     this.columnAreInitialized = false;
     this.columnData = [];
     this.file = file;
+
+    this.options = {
+        timeLimit: options.timeLimit || Infinity,
+        memoryLimit: options.memoryLimit || Infinity
+    };
 };
 
 Parser.prototype = {
@@ -19,15 +24,6 @@ Parser.prototype = {
         email: function (cell) {
             return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(cell);
         }
-    },
-
-    completeHandler: function () {
-        var responseData = this.columnData;
-
-        responseData.forEach(function (column) {
-            column.uniqueCellsCount = Object.keys(column.uniqueCellsMap).length;
-            column.uniqueCellsMap = null;
-        });
     },
 
     initializeColumns: function (data) {
@@ -80,29 +76,54 @@ Parser.prototype = {
         }, this);
     },
 
-    parseResponse: function (response) {
+    stepHandler: function (reject, response, parseHandler) {
         if (response && response.data) {
             response.data.forEach(function (data) {
                 this.columnAreInitialized ? this.addColumnData(data) : this.initializeColumns(data);
             }, this);
+
+            if (Date.now() - this.startTime > this.options.timeLimit) {
+                this.rejected = true;
+                parseHandler.abort();
+                reject('Time is above limits');
+            }
+
+            if (process.memoryUsage().heapUsed - this.startHeapUsed > this.options.memoryLimit) {
+                this.rejected = true;
+                parseHandler.abort();
+                reject('Memory is above limits');
+            }
         }
+    },
+
+    completeHandler: function (resolve, data) {
+        this.columnData.forEach(function (column) {
+            column.uniqueCellsCount = Object.keys(column.uniqueCellsMap).length;
+            column.uniqueCellsMap = null;
+        });
+
+        this.rejected || resolve(this.columnData);
     },
 
     getConfig: function () {
         return {
-            //complete: this.completeHandler.bind(this),
-            header: false
-            //chunk: this.stepHandler.bind(this)
+            header: false,
+            step: this.stepHandler.bind(this),
+            complete: this.completeHandler.bind(this)
         }
     },
 
     parse: function () {
-        var parsed = Baby.parse(this.file, this.getConfig());
+        this.startTime = Date.now();
+        this.startHeapUsed = process.memoryUsage().heapUsed;
 
-        this.parseResponse(parsed);
-        this.completeHandler();
-
-        return this.columnData;
+        return new Promise(function (resolve, reject) {
+            Baby.parse(this.file, {
+                header: false,
+                step: this.stepHandler.bind(this, reject),
+                complete: this.completeHandler.bind(this, resolve)
+            });
+        }.bind(this));
     }
 };
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var app = express();
 var multiparty = require('multiparty');
@@ -12,15 +14,26 @@ app.listen(port);
 console.log('Listening port ' + port);
 
 app.post('/parse', parseFile, readFile, parseData, function (req, res) {
-    res.json({
-        parsingType: 'server',
-        filename: req.csvFile.originalFilename,
-        startTime: req.startTime,
-        finishTime: req.finishTime,
-        duration: req.finishTime - req.startTime,
-        memory: process.memoryUsage(),
-        columnData: req.columnData
-    });
+    if (req.error) {
+        res.json({
+            parsingType: 'server',
+            filename: req.csvFile.originalFilename,
+            startTime: req.startTime,
+            finishTime: req.finishTime,
+            error: true,
+            errorMessage: req.error
+        })
+    } else {
+        res.json({
+            parsingType: 'server',
+            filename: req.csvFile.originalFilename,
+            startTime: req.startTime,
+            finishTime: req.finishTime,
+            duration: req.finishTime - req.startTime,
+            memory: process.memoryUsage(),
+            columnData: req.columnData
+        });
+    }
 });
 
 function parseFile(req, res, next) {
@@ -30,6 +43,8 @@ function parseFile(req, res, next) {
 
     form.parse(req, function (err, fields, files) {
         req.csvFile = files.file[0];
+        req.memoryLimit = parseInt(fields.memoryLimit[0], 10);
+        req.timeLimit = parseInt(fields.timeLimit[0], 10);
 
         next();
     });
@@ -44,12 +59,22 @@ function readFile(req, res, next) {
 }
 
 function parseData(req, res, next) {
-    var parser = new Parser(req.csvData.toString('utf8'));
+    var parser = new Parser(req.csvData.toString('utf8'), {
+        memoryLimit: req.memoryLimit * 1000,
+        timeLimit: req.timeLimit * 1000
+    });
 
-    req.columnData = parser.parse();
-    req.finishTime = Date.now();
+    parser.parse().then(function (columnData) {
+        req.columnData = columnData;
+        req.finishTime = Date.now();
 
-    next();
+        next();
+    }, function (error) {
+        req.error = error;
+        req.finishTime = Date.now();
+
+        next();
+    });
 }
 
 function allowCrossDomain(req, res, next) {

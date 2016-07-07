@@ -118,8 +118,19 @@ body {
     line-height: 1.3;
 }
 
+.upload-form__limit {
+    padding: 1rem 2rem;
+    margin: 0 2rem;
+    width: 30rem;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 0.5rem;
+    outline: none;
+}
+
 .file-uploader {
     display: inline-block;
+    margin-bottom: 2rem;
     color: white;
     font-size: 2rem;
 }

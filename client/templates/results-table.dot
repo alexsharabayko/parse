@@ -1,4 +1,4 @@
-<h3 class="file-tables__title">{{=it.filename}} (was parsed by {{=it.parsingType}})</h3>
+<h3 class="file-tables__title">{{=it.filename}} (was{{?it.error}}n't{{?}} parsed by {{=it.parsingType}})</h3>
 
 <div class="file-tables__time__info">
     <span><strong>Start time:</strong> {{=(new Date(it.startTime)).toLocaleString()}}</span>
@@ -6,6 +6,7 @@
     <span><strong>Total time:</strong> {{=it.duration}} milliseconds</span>
 </div>
 
+{{?!it.error}}
 <table class="fn-results result-table">
     <thead>
     <tr>
@@ -30,3 +31,6 @@
 <div class="file-tables__common">
     <strong>Common info: </strong> {{=it.columnData[0].cellsCount}} rows and {{=it.columnData.length}} columns
 </div>
+{{??}}
+<p class="error">{{=it.errorMessage}}</p>
+{{?}}

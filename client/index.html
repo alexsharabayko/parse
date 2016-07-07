@@ -15,15 +15,25 @@
                 <span class="fn-file-uploader-text">Choose file...</span>
                 <input name="file" type="file" class="fn-csv-file"/>
             </label>
+
+            <div>
+                <input class="upload-form__limit" type="number" name="memoryLimit"
+                       placeholder="Server memory limit (in kilobytes)"/>
+                <input class="upload-form__limit" type="number" name="timeLimit"
+                       placeholder="Server time limit (in seconds)"/>
+            </div>
         </div>
+
+
         <div class="upload-form__btn__wrapper">
             <button class="fn-parse-with-server upload-form__button">Parse file with server</button>
-            <p class="upload-form__btn__description">Parsing file with server (BabyParse fraemwork) with statistic</p>
+            <p class="upload-form__btn__description">Parsing file with server (BabyParse fraemwork) with statistic. Also
+                you can set parsing limits for time and memory in sent file.</p>
         </div>
         <div class="upload-form__btn__wrapper">
             <button class="fn-parse-with-client upload-form__button second">Parse file with client</button>
             <p class="upload-form__btn__description">Parsing file client(PapaParse fraemwork, Chrome better) without
-                statistic</p>
+                statistic.</p>
         </div>
     </form>
 </section>
@@ -31,10 +41,12 @@
 <section class="section">
     <h2 class="section__title">Statistic</h2>
 
-    <h3 class="statistic-title">Time statistic (on client and server)</h3>
+    <h3 class="statistic-title">Time statistic (on client and server) in milliseconds</h3>
+
     <div class="fn-time-chart chart"></div>
 
-    <h3 class="statistic-title">Memory statistic (only on server)</h3>
+    <h3 class="statistic-title">Memory statistic (only on server) in bytes</h3>
+
     <div class="fn-memory-chart chart"></div>
 </section>
 
