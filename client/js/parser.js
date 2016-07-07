@@ -32,11 +32,14 @@ Parser.prototype = {
             column.uniqueCellsMap = null;
         });
 
+        this.finishTime = Date.now();
+
         this.options.success({
             parsingType: 'client',
             filename: this.file.name,
             startTime: this.startTime,
-            finishTime: Date.now(),
+            finishTime: this.finishTime,
+            duration: this.finishTime - this.startTime,
             columnData: this.columnData
         });
     },
@@ -100,8 +103,6 @@ Parser.prototype = {
     },
 
     getConfig: function () {
-        window.startTime = Date.now();
-
         return {
             complete: this.completeHandler.bind(this),
             header: false,

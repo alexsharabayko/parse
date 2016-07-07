@@ -185,14 +185,29 @@ body {
     text-align: center;
 }
 
-.time-chart,
-.memory-chart {
-
+.chart {
+    margin-bottom: 2rem;
 }
 
-.time-chart > .bar,
-.memory-chart > .bar {
+.chart .bar {
     margin-bottom: 0.2rem;
+    font-size: 0;
+}
+
+.chart .bar-title {
+    display: inline-block;
+    width: 20%;
+    vertical-align: middle;
+    font-size: 1.6rem;
+}
+
+.chart .bar-wrapper {
+    display: inline-block;
+    width: 80%;
+    vertical-align: middle;
+}
+
+.chart .bar-value {
     padding: 0 1rem;
     line-height: 3rem;
     overflow: hidden;
@@ -201,4 +216,9 @@ body {
     text-overflow: ellipsis;
     background-color: #4682b4;
     white-space: nowrap;
+}
+
+.statistic-title {
+    margin-bottom: 1rem;
+    font-size: 2rem;
 }

@@ -1,9 +1,8 @@
 var SimpleChart = function (wrapper) {
     this.wrapper = wrapper;
 
+    this.bars = [];
     this.data = [];
-
-    this.initElements();
 };
 
 SimpleChart.prototype = {
@@ -19,27 +18,24 @@ SimpleChart.prototype = {
         return this;
     },
 
-    initElements: function () {
-        this.wrapper.innerHTML = '';
-        this.elements = [];
-
-        return this;
-    },
-
     refreshElments: function () {
         var wrapper = this.wrapper;
+        var lengthDifference = this.data.length - this.bars.length;
+        var templateFn = require('templates/chart-item.dot');
+        var itemHTML = templateFn();
 
-        this.initElements();
+        for (let i = 0; i < lengthDifference; i++) {
+            let wrap = document.createElement('div');
+            let bar;
 
-        this.data.forEach(function () {
-            var bar = document.createElement('div');
+            wrap.innerHTML = itemHTML;
 
-            bar.classList.add('bar');
+            bar = wrap.firstElementChild;
 
             wrapper.appendChild(bar);
 
-            this.elements.push(bar);
-        }, this);
+            this.bars.push(bar);
+        }
 
         return this;
     },
@@ -47,8 +43,8 @@ SimpleChart.prototype = {
     style: function (property, fn) {
         var values = this.data.map(fn, this);
 
-        this.elements.forEach(function (elem, i) {
-            elem.style[property] = values[i];
+        this.bars.forEach(function (elem, i) {
+            elem.querySelector('.fn-value').style[property] = values[i];
         });
 
         return this;
@@ -57,8 +53,18 @@ SimpleChart.prototype = {
     text: function (fn) {
         var values = this.data.map(fn, this);
 
-        this.elements.forEach(function (elem, i) {
-            elem.textContent = values[i];
+        this.bars.forEach(function (elem, i) {
+            elem.querySelector('.fn-value').textContent = values[i];
+        });
+
+        return this;
+    },
+
+    title: function (fn) {
+        var values = this.data.map(fn, this);
+
+        this.bars.forEach(function (elem, i) {
+            elem.querySelector('.fn-title').textContent = values[i];
         });
 
         return this;

@@ -29,12 +29,14 @@ app.post('/goro', function (req, res) {
             });
 
             var columnData = parser.parse();
+            var finishTime = Date.now();
 
             res.json({
                 parsingType: 'server',
                 filename: file.originalFilename,
                 startTime: startTime,
-                finishTime: Date.now(),
+                finishTime: finishTime,
+                duration: finishTime - startTime,
                 memory: process.memoryUsage(),
                 columnData: columnData
             });

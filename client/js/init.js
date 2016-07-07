@@ -17,18 +17,21 @@ var refreshTimeChart = function (d) {
         .addValue(d)
         .style('width', function (i) {
             var max = Math.max.apply(Math, this.data.map(function (d) {
-                return d.finishTime - d.startTime;
+                return d.duration;
             }));
 
-            return Math.round((i.finishTime - i.startTime) / max * 100) + '%';
+            return Math.round(i.duration / max * 100) + '%';
         })
         .text(function (i) {
-            return i.filename;
+            return i.duration;
+        })
+        .title(function (i) {
+            return i.filename + ' (' + i.parsingType + ')';
         });
 };
 
 var refreshMemoryChart = function (d) {
-    timeChart
+    memoryChart
         .addValue(d)
         .style('width', function (i) {
             var max = Math.max.apply(Math, this.data.map(function (d) {
@@ -38,6 +41,9 @@ var refreshMemoryChart = function (d) {
             return Math.round(i.memory.heapUsed / max * 100) + '%';
         })
         .text(function (i) {
+            return i.memory.heapUsed;
+        })
+        .title(function (i) {
             return i.filename;
         });
 };
