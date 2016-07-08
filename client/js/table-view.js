@@ -7,7 +7,7 @@ var tableView =  {
         if (!currentLi) {
             var li = document.createElement('li');
 
-            mainContainer.appendChild(li);
+            mainContainer.insertBefore(li, mainContainer.firstElementChild);
 
             currentLi = li;
         }
