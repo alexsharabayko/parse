@@ -6,7 +6,7 @@ This engine can parse file on client (more fast, without time and memory control
 
 0) Clone it
 
-1) First, run command
+1) Run command
 
 ```
 $ npm i
