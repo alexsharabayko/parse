@@ -1,8 +1,10 @@
 # Parsing engine for csv files
 
-This engine can parse file on client (more fast, without time and memory control) and on server (less fast, with control);
+This engine can parse file on client (more fast, without time and memory control) and on server (less fast, with control).
 
 ## To run project:
+
+Clone it
 
 First, run command
 
