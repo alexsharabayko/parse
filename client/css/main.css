@@ -102,6 +102,11 @@ body {
     cursor: pointer;
 }
 
+.upload-form__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
 .upload-form__button.second {
     background-color: #337ab7;
 }
@@ -133,6 +138,7 @@ body {
     margin-bottom: 2rem;
     color: white;
     font-size: 2rem;
+    cursor: pointer;
 }
 
 .file-uploader input {
