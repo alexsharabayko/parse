@@ -1,8 +1,21 @@
-# parse
-Parsing engine foe csv files
+# Parsing engine foe csv files
 
-To run project:
+## To run project:
 
-1) Run command npm i
+First, run command
 
-2) Run command npm start
+```
+$ npm i
+```
+
+Then
+
+```
+$ npm start
+```
+
+## Engines
+
+Node version 5.2.0
+
+npm version 3.3.12

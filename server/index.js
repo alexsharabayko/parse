@@ -81,7 +81,7 @@ function readFile(req, res, next) {
  */
 function parseData(req, res, next) {
     var parser = new Parser(req.csvData.toString('utf8'), {
-        memoryLimit: req.memoryLimit * 1000,
+        memoryLimit: req.memoryLimit * 1024,
         timeLimit: req.timeLimit * 1000
     });
 
