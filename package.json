@@ -22,7 +22,8 @@
     "supervisor": "supervisor --debug server/index.js",
     "publish": "NODE_ENV=production webpack"
   },
-  "dependencies": {
-    "connect-busboy": "0.0.2"
+  "engines": {
+    "node": "5.2.0",
+    "npm": "3.3.12"
   }
 }
