@@ -9,13 +9,13 @@ module.exports = {
     context: __dirname + '/client',
 
     entry: {
-        index: './js/init'
+        index: './js/main'
     },
 
     output: {
         path: __dirname + '/public',
         //publicPath: '/',
-        filename: 'init.js'
+        filename: 'bundle.js'
     },
 
     devtool: NODE_ENV === 'development' ? "cheap-inline-module-source-map" : null,

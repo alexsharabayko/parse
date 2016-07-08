@@ -24,9 +24,9 @@ SimpleChart.prototype = {
         var templateFn = require('templates/chart-item.dot');
         var itemHTML = templateFn();
 
-        for (let i = 0; i < lengthDifference; i++) {
-            let wrap = document.createElement('div');
-            let bar;
+        for (var i = 0; i < lengthDifference; i++) {
+            var wrap = document.createElement('div');
+            var bar;
 
             wrap.innerHTML = itemHTML;
 

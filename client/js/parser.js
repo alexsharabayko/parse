@@ -62,9 +62,9 @@ Parser.prototype = {
         var typeCheckers = this.typeCheckers;
 
         if (!item.type) {
-            let checkers = Object.keys(typeCheckers);
+            var checkers = Object.keys(typeCheckers);
 
-            for (let j = 0; j < checkers.length; j++) {
+            for (var j = 0; j < checkers.length; j++) {
                 if (typeCheckers[checkers[j]](data[i])) {
                     item.type = checkers[j];
                     break;
