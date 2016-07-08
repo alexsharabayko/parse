@@ -13,7 +13,10 @@ app.use(allowCrossDomain);
 app.listen(port);
 console.log('Listening port ' + port);
 
-app.post('/parse', parseFile, readFile, parseData, function (req, res) {
+/**
+ * Lintening request
+ */
+app.post('/parse', parseParameters, readFile, parseData, function (req, res) {
     if (req.error) {
         res.json({
             parsingType: 'server',
@@ -36,7 +39,13 @@ app.post('/parse', parseFile, readFile, parseData, function (req, res) {
     }
 });
 
-function parseFile(req, res, next) {
+/**
+ * Parse parameters of request
+ * @param req
+ * @param res
+ * @param next
+ */
+function parseParameters(req, res, next) {
     req.startTime = Date.now();
 
     var form = new multiparty.Form();
@@ -50,6 +59,12 @@ function parseFile(req, res, next) {
     });
 }
 
+/**
+ * Read sent file
+ * @param req
+ * @param res
+ * @param next
+ */
 function readFile(req, res, next) {
     fs.readFile(req.csvFile.path, function (err, data) {
         req.csvData = data;
@@ -58,6 +73,12 @@ function readFile(req, res, next) {
     });
 }
 
+/**
+ * Parse csv file by parser
+ * @param req
+ * @param res
+ * @param next
+ */
 function parseData(req, res, next) {
     var parser = new Parser(req.csvData.toString('utf8'), {
         memoryLimit: req.memoryLimit * 1000,
@@ -77,6 +98,12 @@ function parseData(req, res, next) {
     });
 }
 
+/**
+ * cors helper
+ * @param req
+ * @param res
+ * @param next
+ */
 function allowCrossDomain(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
