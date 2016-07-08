@@ -1,3 +1,8 @@
+/**
+ * Draw chart using data
+ * @param wrapper (Element)
+ * @constructor
+ */
 var SimpleChart = function (wrapper) {
     this.wrapper = wrapper;
 
@@ -5,7 +10,16 @@ var SimpleChart = function (wrapper) {
     this.data = [];
 };
 
+/**
+ * Chart methods
+ * @type {{addValue: Function, refreshElments: Function, style: Function, text: Function, title: Function}}
+ */
 SimpleChart.prototype = {
+    /**
+     * Refresh data, and refresh elements by new data
+     * @param value {Object|Array}
+     * @returns {SimpleChart}
+     */
     addValue: function (value) {
         if (value.length) {
             this.data = this.data.concat(value);
@@ -18,6 +32,10 @@ SimpleChart.prototype = {
         return this;
     },
 
+    /**
+     * Chain function, which creates new bars with new data
+     * @returns {SimpleChart}
+     */
     refreshElments: function () {
         var wrapper = this.wrapper;
         var lengthDifference = this.data.length - this.bars.length;
@@ -40,6 +58,12 @@ SimpleChart.prototype = {
         return this;
     },
 
+    /**
+     * Styling bar function
+     * @param property {String} css property
+     * @param fn {Function} map fn
+     * @returns {SimpleChart}
+     */
     style: function (property, fn) {
         var values = this.data.map(fn, this);
 
@@ -50,6 +74,11 @@ SimpleChart.prototype = {
         return this;
     },
 
+    /**
+     * Text bars function
+     * @param fn {Function} map fn
+     * @returns {SimpleChart}
+     */
     text: function (fn) {
         var values = this.data.map(fn, this);
 
@@ -60,6 +89,11 @@ SimpleChart.prototype = {
         return this;
     },
 
+    /**
+     * Text titles function
+     * @param fn {Function} map fn
+     * @returns {SimpleChart}
+     */
     title: function (fn) {
         var values = this.data.map(fn, this);
 

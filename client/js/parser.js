@@ -1,32 +1,73 @@
+/**
+ * Papaparse fraemwork
+ * @type {Papa|exports|module.exports}
+ */
 var Papa = require('papaparse');
 
-var Parser = function (file, options) {
+/**
+ * Parser engine constructor
+ * @param file {File}
+ * @constructor
+ */
+var Parser = function (file) {
+    /**
+     * Check that headers was created
+     * @type {boolean}
+     */
     this.columnAreInitialized = false;
+    /**
+     * Column data
+     * @type {Array}
+     */
     this.columnData = [];
+    /**
+     * Instance file
+     * @type {File}
+     */
     this.file = file;
-    this.options = options;
-
-    this.startTime = Date.now();
-
-    Papa.parse(this.file, this.getConfig());
 };
 
+/**
+ * Parser methods
+ * @type {{typeCheckers: {number: Function, date: Function, email: Function}, completeHandler: Function, initializeColumns: Function, setItemTypeIfNeed: Function, addColumnData: Function, stepHandler: Function, getConfig: Function, parse: Function}}
+ */
 Parser.prototype = {
+    /**
+     * Set of functions, which determine type of column
+     */
     typeCheckers: {
+        /**
+         * @param cell
+         * @returns {boolean}
+         */
         number: function (cell) {
             return /^-?\d+\.?\d*$/.test(cell);
         },
+        /**
+         * @param cell
+         * @returns {number}
+         */
         date: function (cell) {
             return Date.parse(cell);
         },
+        /**
+         * @param cell
+         * @returns {boolean}
+         */
         email: function (cell) {
             return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(cell);
         }
     },
 
-    completeHandler: function (result) {
+    /**
+     * Called, then parsing was finished
+     * Rebuild data and resolve main promise
+     * @param resolve {Promise}
+     */
+    completeHandler: function (resolve) {
         var responseData = this.columnData;
 
+        // Returns only unique cells length
         responseData.forEach(function (column) {
             column.uniqueCellsCount = Object.keys(column.uniqueCellsMap).length;
             column.uniqueCellsMap = null;
@@ -34,7 +75,8 @@ Parser.prototype = {
 
         this.finishTime = Date.now();
 
-        this.options.success({
+        // Return data
+        resolve({
             parsingType: 'client',
             filename: this.file.name,
             startTime: this.startTime,
@@ -44,6 +86,10 @@ Parser.prototype = {
         });
     },
 
+    /**
+     * Create headers using first not empty row
+     * @param data
+     */
     initializeColumns: function (data) {
         data.forEach(function (cell) {
             this.columnData.push({
@@ -58,6 +104,12 @@ Parser.prototype = {
         this.columnAreInitialized += 1;
     },
 
+    /**
+     *
+     * @param item
+     * @param data
+     * @param i
+     */
     setItemTypeIfNeed: function (item, data, i) {
         var typeCheckers = this.typeCheckers;
 
@@ -80,6 +132,10 @@ Parser.prototype = {
         }
     },
 
+    /**
+     * Add column cell info
+     * @param data {Cell}
+     */
     addColumnData: function (data) {
         this.columnData.forEach(function (item, i) {
             item.cellsCount += 1;
@@ -94,6 +150,10 @@ Parser.prototype = {
         }, this);
     },
 
+    /**
+     * Add data info to result
+     * @param response {Object}
+     */
     stepHandler: function (response) {
         if (response && response.data) {
             response.data.forEach(function (data) {
@@ -102,12 +162,20 @@ Parser.prototype = {
         }
     },
 
-    getConfig: function () {
-        return {
-            complete: this.completeHandler.bind(this),
-            header: false,
-            chunk: this.stepHandler.bind(this)
-        }
+    /**
+     * Run parsing
+     * @returns {Promise}
+     */
+    parse: function () {
+        this.startTime = Date.now();
+
+        return new Promise(function (resolve, reject) {
+            Papa.parse(this.file, {
+                header: false,
+                chunk: this.stepHandler.bind(this),
+                complete: this.completeHandler.bind(this, resolve)
+            });
+        }.bind(this));
     }
 };
 

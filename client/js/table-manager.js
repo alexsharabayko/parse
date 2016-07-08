@@ -1,8 +1,23 @@
+/**
+ * Container for tables list
+ * @type {Element}
+ */
 var mainContainer = document.querySelector('.fn-file-tables');
 
+/**
+ * Current item
+ * @type {Element}
+ */
 var currentLi = null;
 
+/**
+ * Helpers
+ * @type {{createCurrentLi: Function, showLoading: Function, drawTable: Function, removeCurrentLi: Function}}
+ */
 var tableView =  {
+    /**
+     * Create new current item if need
+     */
     createCurrentLi: function () {
         if (!currentLi) {
             var li = document.createElement('li');
@@ -13,6 +28,9 @@ var tableView =  {
         }
     },
 
+    /**
+     * Show loading template
+     */
     showLoading: function () {
         var templateFn = require('templates/table-loading.dot');
 
@@ -21,6 +39,10 @@ var tableView =  {
         currentLi.innerHTML = templateFn();
     },
 
+    /**
+     * Draw parsing results
+     * @param responseData {Object}
+     */
     drawTable: function (responseData) {
         var templateFn = require('templates/results-table.dot');
 
@@ -31,6 +53,9 @@ var tableView =  {
         tableView.removeCurrentLi();
     },
 
+    /**
+     * Removing
+     */
     removeCurrentLi: function () {
         currentLi = null;
     }

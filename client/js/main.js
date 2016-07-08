@@ -14,7 +14,7 @@ var Parser = require('parser');
  *
  * @type {*|Object|!Object}
  */
-var tableView = require('table-view');
+var tableManager = require('table-manager');
 var formManager = require('form-manager');
 var chartManager = require('charts-manager');
 
@@ -64,17 +64,19 @@ var clientParseController = function (event) {
     }
 
     // Show loading on tables view and disable all controls
-    tableView.showLoading();
+    tableManager.showLoading();
     formManager.setDisabled(true);
 
-    new Parser(formManager.getFile(), { success: function (responseData) {
+    var parser = new Parser(formManager.getFile());
+
+    parser.parse().then(function (responseData) {
         // Show data
-        tableView.drawTable(responseData);
+        tableManager.drawTable(responseData);
         chartManager.refreshTimeChart(responseData);
 
         // Enable form
         formManager.setDisabled(false);
-    }});
+    });
 };
 
 /**
@@ -91,13 +93,13 @@ var serverParserController = function (event) {
     }
 
     // Show loading on tables view and disable all controls
-    tableView.showLoading();
+    tableManager.showLoading();
     formManager.setDisabled(true);
 
     // Request return success or errors of memory and time
     requestJSON('http://localhost:4000/parse', 'POST', formManager.getData()).then(function (responseData) {
         // Draw table info anyway (in success and error cases)
-        tableView.drawTable(responseData);
+        tableManager.drawTable(responseData);
 
         // In success case draw memory and time statistics (charts)
         if (!responseData.error) {
