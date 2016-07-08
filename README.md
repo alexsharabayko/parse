@@ -1,4 +1,6 @@
-# Parsing engine foe csv files
+# Parsing engine for csv files
+
+This engine can parse file on client (more fast, without time and memory control) and on server (less fast, with control);
 
 ## To run project:
 
