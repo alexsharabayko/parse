@@ -4,15 +4,15 @@ This engine can parse file on client (more fast, without time and memory control
 
 ## To run project:
 
-Clone it
+0) Clone it
 
-First, run command
+1) First, run command
 
 ```
 $ npm i
 ```
 
-Then
+2) Then
 
 ```
 $ npm start
