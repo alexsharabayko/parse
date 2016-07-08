@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Container for tables list
  * @type {Element}

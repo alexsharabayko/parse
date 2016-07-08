@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Papaparse fraemwork
  * @type {Papa|exports|module.exports}
@@ -105,7 +107,7 @@ Parser.prototype = {
     },
 
     /**
-     *
+     * Set cell type by checkers functions
      * @param item
      * @param data
      * @param i

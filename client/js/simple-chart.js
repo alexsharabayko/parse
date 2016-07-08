@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Draw chart using data
  * @param wrapper (Element)

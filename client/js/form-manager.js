@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Form element
  * @type {Element}
@@ -33,15 +35,15 @@ var formManager = {
     fileElement: fileElement,
 
     /**
-     * Disabling or enabling all form
+     * Disabling or enabling certain elements
      * @param value {Boolean}
      */
     setDisabled: function (value) {
-        var elements = formManager.form.elements;
+        var elements = Array.prototype.slice.call(formManager.form.querySelectorAll('.fn-disabled-handle'), 0);
 
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].disabled = value;
-        }
+        elements.forEach(function (elem) {
+            elem.disabled = value;
+        });
     },
 
     /**

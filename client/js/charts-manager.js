@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Class of simple chart
  * @type {*|Object|!Object}
