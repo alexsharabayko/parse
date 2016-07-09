@@ -1,20 +1,22 @@
 'use strict';
 
+var c = require('const');
+
 /**
  * Form element
  * @type {Element}
  */
-var form = document.querySelector('.fn-upload-file-form');
+var form = document.querySelector(c.FORM_CLASS);
 /**
  * File element
  * @type {Element}
  */
-var fileElement = document.querySelector('.fn-csv-file');
+var fileElement = document.querySelector(c.FILE_UPLOAD_CLASS);
 /**
  * Label file element (for customizing)
  * @type {Element}
  */
-var fileLabel = document.querySelector('.fn-file-uploader-text');
+var fileLabel = document.querySelector(c.FILE_UPLOAD_LABEL_CLASS);
 
 /**
  * When the file upload is changed, redraw text at the label
@@ -22,7 +24,7 @@ var fileLabel = document.querySelector('.fn-file-uploader-text');
 var customFileUploadController = function () {
     var file = fileElement.files[0];
 
-    fileLabel.innerHTML = file.name || 'Choose file...';
+    fileLabel.innerHTML = file.name || c.CHOOSE_FILE_TEXT;
 };
 fileElement.addEventListener('change', customFileUploadController);
 
@@ -39,7 +41,7 @@ var formManager = {
      * @param value {Boolean}
      */
     setDisabled: function (value) {
-        var elements = Array.prototype.slice.call(formManager.form.querySelectorAll('.fn-disabled-handle'), 0);
+        var elements = Array.prototype.slice.call(formManager.form.querySelectorAll(c.FORM_DISABLE_HANDLE_CLASS), 0);
 
         elements.forEach(function (elem) {
             elem.disabled = value;

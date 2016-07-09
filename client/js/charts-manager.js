@@ -1,5 +1,7 @@
 'use strict';
 
+var c = require('const');
+
 /**
  * Class of simple chart
  * @type {*|Object|!Object}
@@ -10,12 +12,12 @@ var SimpleChart = require('simple-chart');
  * Time chart (shows time dynamic)
  * @type {*|Object|!Object}
  */
-var timeChart = new SimpleChart(document.querySelector('.fn-time-chart'));
+var timeChart = new SimpleChart(document.querySelector(c.TIME_CHART_CLASS));
 /**
  * Memory chart (shows memory dynamic)
  * @type {*|Object|!Object}
  */
-var memoryChart = new SimpleChart(document.querySelector('.fn-memory-chart'));
+var memoryChart = new SimpleChart(document.querySelector(c.MEMORY_CHART_CLASS));
 
 /**
  * Chart helpers functions

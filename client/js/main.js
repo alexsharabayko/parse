@@ -14,6 +14,7 @@ var Parser = require('parser');
  *
  * @type {*|Object|!Object}
  */
+var c = require('const');
 var tableManager = require('table-manager');
 var formManager = require('form-manager');
 var chartManager = require('charts-manager');
@@ -22,12 +23,12 @@ var chartManager = require('charts-manager');
  * Server control button
  * @type {Element}
  */
-var runServerParseButton = document.querySelector('.fn-parse-with-server');
+var runServerParseButton = document.querySelector(c.SERVER_PARSE_BUTTON_CLASS);
 /**
  * Client control button
  * @type {Element}
  */
-var runClientParseButton = document.querySelector('.fn-parse-with-client');
+var runClientParseButton = document.querySelector(c.CLIENT_PARSE_BUTTON_CLASS);
 
 //---------------------------------------------- HELP FUNCTIONS START --------------------------------------------------
 /**
@@ -38,7 +39,7 @@ var runClientParseButton = document.querySelector('.fn-parse-with-client');
  * @returns {Promise}
  */
 var requestJSON = function (url, method, data) {
-    return window.fetch(url, {
+    return window.fetch(c.API_URL + url, {
         method: method,
         body: data
     }).then(function (resp) {
@@ -88,7 +89,7 @@ var serverParserController = function (event) {
 
     // If file wasn't chosen
     if (!formManager.isValid()) {
-        alert('Choose file');
+        alert(c.CHOOSE_FILE_ERROR);
         return;
     }
 
@@ -97,7 +98,7 @@ var serverParserController = function (event) {
     formManager.setDisabled(true);
 
     // Request return success or errors of memory and time
-    requestJSON('http://localhost:4000/parse', 'POST', formManager.getData()).then(function (responseData) {
+    requestJSON('parse', 'POST', formManager.getData()).then(function (responseData) {
         // Draw table info anyway (in success and error cases)
         tableManager.drawTable(responseData);
 
