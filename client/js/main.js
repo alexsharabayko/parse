@@ -60,7 +60,7 @@ var clientParseController = function (event) {
 
     // If file wasn't chosen
     if (!formManager.isValid()) {
-        alert('Choose file');
+        alert(c.CHOOSE_FILE_ERROR);
         return;
     }
 
