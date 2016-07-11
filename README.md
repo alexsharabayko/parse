@@ -2,21 +2,19 @@
 
 This engine can parse file on client (more fast, without time and memory control) and on server (less fast, with control).
 
-## To run project:
-
-0) Clone it
-
-1) Run command
+## Install
 
 ```
 $ npm i
 ```
 
-2) Then
+## Run project
 
 ```
 $ npm start
 ```
+
+After got to http://localhost:5555/
 
 ## Engines
 
