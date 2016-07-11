@@ -14,7 +14,7 @@ $ npm i
 $ npm start
 ```
 
-After got to http://localhost:5555/
+After it, go to http://localhost:5555/
 
 ## Engines
 
